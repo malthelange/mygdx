@@ -43,6 +43,17 @@ public class Player {
 
     void move(Vector2 direction, float delta) {
         direction.scl(delta * 100);
+        if (direction.x > 0 && movementState != PlayerMovementState.RIGHT) {
+            setMovementState(PlayerMovementState.RIGHT);
+        } else if (direction.x < 0 && movementState != PlayerMovementState.LEFT) {
+            setMovementState(PlayerMovementState.LEFT);
+        } else if (direction.y > 0 && movementState != PlayerMovementState.UP) {
+            setMovementState(PlayerMovementState.UP);
+        } else if (direction.y < 0 && movementState != PlayerMovementState.DOWN) {
+            setMovementState(PlayerMovementState.DOWN);
+        } else if (direction.x == 0 && direction.y == 0 && movementState != PlayerMovementState.IDLE) {
+            setMovementState(PlayerMovementState.IDLE);
+        }
         position.add(direction);
         mainScreen.addDtoToSend(new PlayerUpdateDto(uuid, direction));
     }
@@ -54,7 +65,35 @@ public class Player {
 
     void render(float delta, SpriteBatch spriteBatch) {
         movementStateTime += delta;
-        spriteBatch.draw(moveForwardAnimation.getKeyFrame(movementStateTime, true), position.x, position.y);
+        switch (movementState) {
+            case UP:
+                spriteBatch.draw(
+                        moveBackWardAnimation.getKeyFrame(movementStateTime, true),
+                        position.x, position.y);
+                break;
+            case DOWN:
+                spriteBatch.draw(
+                        moveForwardAnimation.getKeyFrame(movementStateTime, true),
+                        position.x, position.y);
+                break;
+            case LEFT:
+                TextureRegion transformedFrame = new TextureRegion(moveSideAnimation.getKeyFrame(movementStateTime, true));
+                transformedFrame.flip(true, false);
+                spriteBatch.draw(
+                        transformedFrame,
+                        position.x, position.y);
+                break;
+            case RIGHT:
+                spriteBatch.draw(
+                        moveBackWardAnimation.getKeyFrame(movementStateTime, true),
+                        position.x, position.y);
+                break;
+            case IDLE:
+                spriteBatch.draw(
+                        moveForwardAnimation.getKeyFrame(0, true),
+                        position.x, position.y);
+                break;
+        }
     }
 
     void setPosition(Vector2 position) {
