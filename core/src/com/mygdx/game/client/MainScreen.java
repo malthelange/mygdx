@@ -4,15 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameStateDto;
 import com.mygdx.game.ServerPlayerDto;
 
 public class MainScreen extends ScreenAdapter {
     private SpriteBatch spriteBatch;
     private Player player;
     GameController gameController;
+    private boolean gotUpdate;
 
     public MainScreen(GameController gameController) {
         this.gameController = gameController;
@@ -20,11 +21,16 @@ public class MainScreen extends ScreenAdapter {
     }
 
     public void render(float delta) {
-        doUpdate();
+        getFromServer();
+        doUpdate(delta);
         doRender(delta);
     }
 
-    private void doUpdate() {
+    private void getFromServer() {
+        gameController.getClient().sendTCP(new GameStateDto(gameController.getUuid()));
+    }
+
+    private void doUpdate(float delta) {
         Vector2 direction = new Vector2(0, 0);
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             direction.x -= 1;
@@ -38,7 +44,7 @@ public class MainScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             direction.y -= 1;
         }
-        player.move(direction, gameController.getClient());
+        player.move(direction, delta, gameController.getClient());
     }
 
     private void doRender(float delta) {
@@ -56,5 +62,9 @@ public class MainScreen extends ScreenAdapter {
 
     public void setPlayer(ServerPlayerDto serverPlayerDto) {
         this.player = new Player(serverPlayerDto);
+    }
+
+    public void updateGameState(GameStateDto gameStateDto) {
+        player.setPosition(gameStateDto.serverPlayer.position);
     }
 }

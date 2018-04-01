@@ -14,5 +14,7 @@ public class KryoSetup {
         kryo.register(GetGameDataDto.class);
         kryo.register(ServerPlayerDto.class);
         kryo.register(Vector2.class);
+        kryo.register(GameStateDto.class);
+        kryo.register(PlayerUpdateDto.class);
     }
 }

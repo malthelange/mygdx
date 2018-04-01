@@ -1,7 +1,10 @@
 package com.mygdx.game.server;
 
 import com.esotericsoftware.kryonet.Server;
+import com.mygdx.game.GameStateDto;
 import com.mygdx.game.KryoSetup;
+import com.mygdx.game.PlayerUpdateDto;
+import com.mygdx.game.client.GameController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,8 +14,33 @@ import java.util.UUID;
 public class GameServer {
     private Server server;
     private List<ServerPlayer> serverPlayers;
+    private static final float UPS = 1000 / 60;
+    private float lastUpdate = 0;
+    private float delta = 0;
+    private boolean running = true;
 
     private GameServer() {
+        setUp();
+        loop();
+    }
+
+    private void loop() {
+        lastUpdate = System.currentTimeMillis();
+        while (running) {
+            float currentTime = System.currentTimeMillis();
+            delta += currentTime;
+            lastUpdate = currentTime;
+            while (delta >= GameServer.UPS) {
+                tick();
+                delta -= GameServer.UPS;
+            }
+        }
+    }
+
+    private void tick() {
+    }
+
+    private void setUp() {
         serverPlayers = new ArrayList<>();
         serverPlayers.add(new ServerPlayer(UUID.fromString("1112a53a-8d88-4e04-b580-e54bce7f6a17")));
         server = new Server();
@@ -22,7 +50,7 @@ public class GameServer {
             server.bind(8000);
             server.addListener(new ServerListener(this));
         } catch (IOException e) {
-            e.printStackTrace();
+            return;
         }
     }
 
@@ -37,5 +65,13 @@ public class GameServer {
 
     public static void main(String[] args) {
         new GameServer();
+    }
+
+    public void updatePlayer(PlayerUpdateDto playerUpdateDto) {
+        getServerPlayerFromId(playerUpdateDto.uuid).move(playerUpdateDto.direction);
+    }
+
+    public GameStateDto getGameStateDto(UUID playerId) {
+        return new GameStateDto(getServerPlayerFromId(playerId).getDto());
     }
 }
