@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameStateDto;
@@ -17,12 +18,14 @@ public class MainScreen extends ScreenAdapter {
     private GameController gameController;
     private List<Object> dtoToSend;
     private Map<UUID, Player> otherPlayers;
+    private OrthographicCamera camera;
 
     public MainScreen(GameController gameController) {
         this.gameController = gameController;
         spriteBatch = new SpriteBatch();
         dtoToSend = new ArrayList<>();
         otherPlayers = new HashMap<>();
+        camera = new OrthographicCamera(240, 240 * (1200 / 800));
     }
 
     public void render(float delta) {
@@ -56,6 +59,7 @@ public class MainScreen extends ScreenAdapter {
 
     private void doRender(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
+        spriteBatch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.begin();
         myPlayer.render(delta, spriteBatch);

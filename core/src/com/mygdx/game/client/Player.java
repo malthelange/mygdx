@@ -1,6 +1,7 @@
 package com.mygdx.game.client;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -85,12 +86,14 @@ public class Player {
                 break;
             case RIGHT:
                 spriteBatch.draw(
-                        moveBackWardAnimation.getKeyFrame(movementStateTime, true),
+                        moveSideAnimation.getKeyFrame(movementStateTime, true),
                         position.x, position.y);
                 break;
             case IDLE:
+                Sprite sprite = new Sprite(moveForwardAnimation.getKeyFrame(0, true));
+                sprite.setSize(40, 40);
                 spriteBatch.draw(
-                        moveForwardAnimation.getKeyFrame(0, true),
+                        sprite,
                         position.x, position.y);
                 break;
         }
