@@ -3,6 +3,7 @@ package com.mygdx.game.client;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.esotericsoftware.kryonet.Client;
 import com.mygdx.game.GameStateDto;
 import com.mygdx.game.GetGameDataDto;
@@ -86,6 +87,7 @@ public class GameController extends Game {
 		// TODO should be run in sepperate thread;
 		assetManager = new AssetManager();
 		assetManager.load("badlogic.jpg", Texture.class);
+		assetManager.load("packed/pack-file.atlas", TextureAtlas.class);
 		assetManager.finishLoading();
 	}
 
