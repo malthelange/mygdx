@@ -38,4 +38,8 @@ public class Player {
     public void dispose() {
         texture.dispose();
     }
+
+    public void update(ServerPlayerDto serverPlayerDto) {
+        setPosition(serverPlayerDto.position);
+    }
 }

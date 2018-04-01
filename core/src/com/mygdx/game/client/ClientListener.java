@@ -16,6 +16,7 @@ public class ClientListener extends Listener {
         if (object instanceof GameDataDto) {
            GameDataDto gameDataDto = (GameDataDto) object;
            gameController.startGame(gameDataDto.player);
+            gameController.getMainScreen().setOtherPlayers(gameDataDto.otherPlayers);
         }
         if (object instanceof GameStateDto) {
             gameController.updateGameState((GameStateDto) object);

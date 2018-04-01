@@ -9,19 +9,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameStateDto;
 import com.mygdx.game.ServerPlayerDto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MainScreen extends ScreenAdapter {
     private SpriteBatch spriteBatch;
-    private Player player;
+    private Player myPlayer;
     private GameController gameController;
     private List<Object> dtoToSend;
+    private Map<UUID, Player> otherPlayers;
 
     public MainScreen(GameController gameController) {
         this.gameController = gameController;
         spriteBatch = new SpriteBatch();
         dtoToSend = new ArrayList<>();
+        otherPlayers = new HashMap<>();
     }
 
     public void render(float delta) {
@@ -50,28 +51,43 @@ public class MainScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             direction.y -= 1;
         }
-        player.move(direction, delta);
+        myPlayer.move(direction, delta);
     }
 
     private void doRender(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.begin();
-        player.render(delta, spriteBatch);
+        myPlayer.render(delta, spriteBatch);
+        for (Player otherPlayer : otherPlayers.values()) {
+            otherPlayer.render(delta, spriteBatch);
+        }
         spriteBatch.end();
     }
 
     public void dispose() {
         spriteBatch.dispose();
-        player.dispose();
+        myPlayer.dispose();
     }
 
-    public void setPlayer(ServerPlayerDto serverPlayerDto) {
-        this.player = new Player(serverPlayerDto, this);
+    public void setMyPlayer(ServerPlayerDto serverPlayerDto) {
+        this.myPlayer = new Player(serverPlayerDto, this);
     }
 
     public void updateGameState(GameStateDto gameStateDto) {
-        player.setPosition(gameStateDto.serverPlayer.position);
+        myPlayer.setPosition(gameStateDto.serverPlayer.position);
+        updateOtherPlayers(gameStateDto.otherPlayerDtos);
+    }
+
+    private void updateOtherPlayers(List<ServerPlayerDto> otherPlayerDtos) {
+        for (ServerPlayerDto serverPlayerDto : otherPlayerDtos) {
+            if (otherPlayers.get(serverPlayerDto.id) == null) {
+                Player player = new Player(serverPlayerDto, this);
+                otherPlayers.put(serverPlayerDto.id, player);
+            } else {
+                otherPlayers.get(serverPlayerDto.id).update(serverPlayerDto);
+            }
+        }
     }
 
     public void addDtoToSend(Object object) {
@@ -83,5 +99,16 @@ public class MainScreen extends ScreenAdapter {
             gameController.getClient().sendTCP(dto);
         }
         dtoToSend.clear();
+    }
+
+    public void setOtherPlayers(List<ServerPlayerDto> otherPlayerDtos) {
+        for (ServerPlayerDto serverPlayerDto : otherPlayerDtos) {
+            Player player = new Player(serverPlayerDto, this);
+            if (otherPlayers.get(serverPlayerDto.id) == null) {
+                otherPlayers.put(serverPlayerDto.id, player);
+            } else {
+                otherPlayers.replace(serverPlayerDto.id, player);
+            }
+        }
     }
 }

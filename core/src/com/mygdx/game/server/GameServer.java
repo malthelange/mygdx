@@ -4,15 +4,18 @@ import com.esotericsoftware.kryonet.Server;
 import com.mygdx.game.GameStateDto;
 import com.mygdx.game.KryoSetup;
 import com.mygdx.game.PlayerUpdateDto;
+import com.mygdx.game.ServerPlayerDto;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class GameServer {
     private Server server;
-    private List<ServerPlayer> serverPlayers;
+    private Map<UUID, ServerPlayer> serverPlayers;
     private static final float UPS = 1000 / 60;
     private float lastUpdate = 0;
     private float delta = 0;
@@ -40,7 +43,7 @@ public class GameServer {
     }
 
     private void setUp() {
-        serverPlayers = new ArrayList<>();
+        serverPlayers = new HashMap<>();
         server = new Server();
         KryoSetup.setUpKryo(server.getKryo());
         server.start();
@@ -53,12 +56,7 @@ public class GameServer {
     }
 
     ServerPlayer getServerPlayerFromId(UUID uuid) {
-        for (ServerPlayer serverPlayer : serverPlayers) {
-            if (serverPlayer.getId().equals(uuid)) {
-                return serverPlayer;
-            }
-        }
-        return null;
+        return serverPlayers.get(uuid);
     }
 
     public static void main(String[] args) {
@@ -70,12 +68,22 @@ public class GameServer {
     }
 
     public GameStateDto getGameStateDto(UUID playerId) {
-        return new GameStateDto(getServerPlayerFromId(playerId).getDto());
+        return new GameStateDto(getServerPlayerFromId(playerId).getDto(), getOtherPlayerDtos(playerId));
     }
 
     public ServerPlayer addServerPlayer(UUID uuid) {
         ServerPlayer serverPlayer = new ServerPlayer(uuid);
-        serverPlayers.add(serverPlayer);
+        serverPlayers.put(uuid, serverPlayer);
         return serverPlayer;
+    }
+
+    public List<ServerPlayerDto> getOtherPlayerDtos(UUID uuid) {
+        ServerPlayer serverPlayer = serverPlayers.remove(uuid);
+        List<ServerPlayerDto> dtos = serverPlayers.values()
+                .stream()
+                .map(ServerPlayer::getDto)
+                .collect(Collectors.toList());
+        serverPlayers.put(uuid, serverPlayer);
+        return dtos;
     }
 }

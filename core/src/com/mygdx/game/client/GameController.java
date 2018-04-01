@@ -54,7 +54,7 @@ public class GameController extends Game {
 	}
 
 	public void startGame(ServerPlayerDto serverPlayerDto) {
-		mainScreen.setPlayer(serverPlayerDto);
+		mainScreen.setMyPlayer(serverPlayerDto);
 		setScreen(mainScreen);
 		initFromServer = true;
 	}
