@@ -9,21 +9,27 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameStateDto;
 import com.mygdx.game.ServerPlayerDto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainScreen extends ScreenAdapter {
     private SpriteBatch spriteBatch;
     private Player player;
-    GameController gameController;
-    private boolean gotUpdate;
+    private GameController gameController;
+    private List<Object> dtoToSend;
 
     public MainScreen(GameController gameController) {
         this.gameController = gameController;
         spriteBatch = new SpriteBatch();
+        dtoToSend = new ArrayList<>();
     }
 
     public void render(float delta) {
+        // TODO should probably split ticks and server communication
         getFromServer();
         doUpdate(delta);
         doRender(delta);
+        sendDtos();
     }
 
     private void getFromServer() {
@@ -44,7 +50,7 @@ public class MainScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             direction.y -= 1;
         }
-        player.move(direction, delta, gameController.getClient());
+        player.move(direction, delta);
     }
 
     private void doRender(float delta) {
@@ -61,10 +67,21 @@ public class MainScreen extends ScreenAdapter {
     }
 
     public void setPlayer(ServerPlayerDto serverPlayerDto) {
-        this.player = new Player(serverPlayerDto);
+        this.player = new Player(serverPlayerDto, this);
     }
 
     public void updateGameState(GameStateDto gameStateDto) {
         player.setPosition(gameStateDto.serverPlayer.position);
+    }
+
+    public void addDtoToSend(Object object) {
+        dtoToSend.add(object);
+    }
+
+    public void sendDtos() {
+        for (Object dto : dtoToSend) {
+            gameController.getClient().sendTCP(dto);
+        }
+        dtoToSend.clear();
     }
 }
