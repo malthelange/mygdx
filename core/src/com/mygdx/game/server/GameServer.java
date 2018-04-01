@@ -4,7 +4,6 @@ import com.esotericsoftware.kryonet.Server;
 import com.mygdx.game.GameStateDto;
 import com.mygdx.game.KryoSetup;
 import com.mygdx.game.PlayerUpdateDto;
-import com.mygdx.game.client.GameController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class GameServer {
 
     private void setUp() {
         serverPlayers = new ArrayList<>();
-        serverPlayers.add(new ServerPlayer(UUID.fromString("1112a53a-8d88-4e04-b580-e54bce7f6a17")));
         server = new Server();
         KryoSetup.setUpKryo(server.getKryo());
         server.start();
@@ -73,5 +71,11 @@ public class GameServer {
 
     public GameStateDto getGameStateDto(UUID playerId) {
         return new GameStateDto(getServerPlayerFromId(playerId).getDto());
+    }
+
+    public ServerPlayer addServerPlayer(UUID uuid) {
+        ServerPlayer serverPlayer = new ServerPlayer(uuid);
+        serverPlayers.add(serverPlayer);
+        return serverPlayer;
     }
 }

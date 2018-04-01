@@ -14,15 +14,14 @@ public class ServerListener extends Listener {
         this.gameServer = gameServer;
     }
 
-    public void received (Connection connection, Object object) {
+    public void received(Connection connection, Object object) {
         if (object instanceof GetGameDataDto) {
-            ServerPlayer serverPlayer = gameServer.getServerPlayerFromId(((GetGameDataDto) object).id);
+            GetGameDataDto getGameDataDto = (GetGameDataDto) object;
+            ServerPlayer serverPlayer = gameServer.addServerPlayer(getGameDataDto.uuid);
             connection.sendTCP(new GameDataDto(serverPlayer.getDto()));
-        }
-        else if (object instanceof PlayerUpdateDto) {
+        } else if (object instanceof PlayerUpdateDto) {
             gameServer.updatePlayer((PlayerUpdateDto) object);
-        }
-        else if (object instanceof GameStateDto) {
+        } else if (object instanceof GameStateDto) {
             connection.sendTCP(gameServer.getGameStateDto(((GameStateDto) object).playerId));
         }
     }

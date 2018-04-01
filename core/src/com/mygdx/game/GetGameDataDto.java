@@ -3,9 +3,9 @@ package com.mygdx.game;
 import java.util.UUID;
 
 public class GetGameDataDto {
-    public UUID id;
+    public UUID uuid;
 
-    public GetGameDataDto(UUID id) {
-        this.id = id;
+    public GetGameDataDto(UUID uuid) {
+        this.uuid = uuid;
     }
 }

@@ -14,11 +14,15 @@ import java.util.UUID;
 
 public class GameController extends Game {
 	private MainScreen mainScreen;
-	private UUID uuid = UUID.fromString("1112a53a-8d88-4e04-b580-e54bce7f6a17");
 	private Client client;
+    private UUID uuid;
 	// TODO should probably change to concurrency logs
 	private boolean initFromServer = false;
 	public static AssetManager assetManager;
+
+    public GameController(UUID uuid) {
+        this.uuid = uuid;
+    }
 
 	@Override
 	public void create () {
