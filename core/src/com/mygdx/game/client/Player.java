@@ -5,12 +5,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.PlayerMovementState;
 import com.mygdx.game.PlayerUpdateDto;
 import com.mygdx.game.ServerPlayerDto;
 
 import java.util.UUID;
 
 public class Player {
+    // TODO Would probably be better static
     private final Animation<TextureRegion> moveForwardAnimation;
     private final Animation<TextureRegion> moveBackWardAnimation;
     private final Animation<TextureRegion> moveSideAnimation;
@@ -44,22 +46,27 @@ public class Player {
 
     void move(Vector2 direction, float delta) {
         direction.scl(delta * 100);
-        if (direction.x > 0 && movementState != PlayerMovementState.RIGHT) {
-            setMovementState(PlayerMovementState.RIGHT);
-        } else if (direction.x < 0 && movementState != PlayerMovementState.LEFT) {
-            setMovementState(PlayerMovementState.LEFT);
-        } else if (direction.y > 0 && movementState != PlayerMovementState.UP) {
+        if (direction.y > 0) {
             setMovementState(PlayerMovementState.UP);
-        } else if (direction.y < 0 && movementState != PlayerMovementState.DOWN) {
+        } else if (direction.y < 0) {
             setMovementState(PlayerMovementState.DOWN);
-        } else if (direction.x == 0 && direction.y == 0 && movementState != PlayerMovementState.IDLE) {
-            setMovementState(PlayerMovementState.IDLE);
+        } else {
+            if (direction.x > 0) {
+                setMovementState(PlayerMovementState.RIGHT);
+            } else if (direction.x < 0) {
+                setMovementState(PlayerMovementState.LEFT);
+            } else if (direction.x == 0) {
+                setMovementState(PlayerMovementState.IDLE);
+            }
         }
         position.add(direction);
-        mainScreen.addDtoToSend(new PlayerUpdateDto(uuid, direction));
+        mainScreen.addDtoToSend(new PlayerUpdateDto(uuid, direction, movementState));
     }
 
     public void setMovementState(PlayerMovementState movementState) {
+        if (this.movementState == movementState) {
+            return;
+        }
         this.movementState = movementState;
         movementStateTime = 0;
     }
@@ -108,9 +115,6 @@ public class Player {
 
     void update(ServerPlayerDto serverPlayerDto) {
         setPosition(serverPlayerDto.position);
-    }
-
-    public static enum PlayerMovementState {
-        IDLE, UP, DOWN, LEFT, RIGHT
+        setMovementState(serverPlayerDto.movementState);
     }
 }

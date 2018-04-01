@@ -64,7 +64,7 @@ public class GameServer {
     }
 
     public void updatePlayer(PlayerUpdateDto playerUpdateDto) {
-        getServerPlayerFromId(playerUpdateDto.uuid).move(playerUpdateDto.direction);
+        getServerPlayerFromId(playerUpdateDto.uuid).update(playerUpdateDto);
     }
 
     public GameStateDto getGameStateDto(UUID playerId) {

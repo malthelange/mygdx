@@ -19,5 +19,6 @@ public class KryoSetup {
         kryo.register(GameStateDto.class);
         kryo.register(PlayerUpdateDto.class);
         kryo.register(ArrayList.class);
+        kryo.register(PlayerMovementState.class);
     }
 }
