@@ -15,6 +15,7 @@ public class ServerPlayer {
     public ServerPlayer(UUID id) {
         position = new Vector2(0, 0);
         this.id = id;
+        movementState = PlayerMovementState.IDLE;
     }
 
     public void move(Vector2 direction) {
