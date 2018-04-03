@@ -1,8 +1,6 @@
 package com.mygdx.game.client;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.esotericsoftware.kryonet.Client;
 import com.mygdx.game.GameStateDto;
 import com.mygdx.game.GetGameDataDto;
@@ -18,15 +16,13 @@ public class GameController extends Game {
     private UUID uuid;
 	// TODO should probably change to concurrency logs
 	private boolean initFromServer = false;
-	public static AssetManager assetManager;
-
     public GameController(UUID uuid) {
         this.uuid = uuid;
     }
 
 	@Override
 	public void create () {
-		loadAssets();
+        AssetSupplier.loadAssets();
 		mainScreen = new MainScreen(this);
 		if (setUpConnection()) return;
 		while(!initFromServer) {
@@ -71,7 +67,7 @@ public class GameController extends Game {
 	}
 
 	private static void disposeAssets() {
-		assetManager.dispose();
+        AssetSupplier.dispose();
 	}
 
 	public MainScreen getMainScreen() {
@@ -80,13 +76,6 @@ public class GameController extends Game {
 
 	public Client getClient() {
 		return  client;
-	}
-
-	public static void loadAssets() {
-		// TODO should be run in sepperate thread;
-		assetManager = new AssetManager();
-		assetManager.load("badlogic.jpg", Texture.class);
-		assetManager.finishLoading();
 	}
 
 	public UUID getUuid() {

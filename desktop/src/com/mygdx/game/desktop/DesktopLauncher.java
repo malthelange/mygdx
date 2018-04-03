@@ -9,6 +9,8 @@ import java.util.UUID;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.width = 1200;
+        config.height = 800;
         new LwjglApplication(new GameController(UUID.fromString(arg[0])), config);
     }
 }
