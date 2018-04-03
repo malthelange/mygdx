@@ -12,14 +12,13 @@ import com.mygdx.game.ServerPlayerDto;
 import java.util.UUID;
 
 public class Player {
-    private static final float SPEED = 20f;
+    private static final float SPEED = 10f;
     // TODO Would probably be better static
+    private static final float WIDTH = 1f;
+    private static final float HEIGHT = 1f;
     private final Animation<TextureRegion> moveForwardAnimation;
     private final Animation<TextureRegion> moveBackWardAnimation;
     private final Animation<TextureRegion> moveSideAnimation;
-    private static final float WIDTH = 1f;
-    private static final float HEIGHT = 1f;
-
     private Vector2 position;
     private UUID uuid;
     private MainScreen mainScreen;
@@ -29,21 +28,9 @@ public class Player {
     public Player(ServerPlayerDto serverPlayerDto, MainScreen mainScreen) {
         this.position = serverPlayerDto.position;
         this.uuid = serverPlayerDto.id;
-        moveForwardAnimation =
-                new Animation<>(
-                        0.25f,
-                        AssetUtil.getAnimationArray("packed/pack-file.atlas", "player/Player", 16),
-                        Animation.PlayMode.LOOP);
-        moveBackWardAnimation =
-                new Animation<>(
-                        0.25f,
-                        AssetUtil.getAnimationArray("packed/pack-file.atlas", "player/Player_back", 16),
-                        Animation.PlayMode.LOOP);
-        moveSideAnimation =
-                new Animation<>(
-                        0.25f,
-                        AssetUtil.getAnimationArray("packed/pack-file.atlas", "player/Player_sideways", 16),
-                        Animation.PlayMode.LOOP);
+        moveForwardAnimation = AssetSupplier.PLAYER_MOVES_FORWARD_ANIMATION;
+        moveBackWardAnimation = AssetSupplier.PLAYER_MOVES_BACKWARD_ANIMATION;
+        moveSideAnimation = AssetSupplier.PLAYER_MOVES_SIDEWAYS_ANIMATION;
         movementState = PlayerMovementState.IDLE;
         this.mainScreen = mainScreen;
     }
