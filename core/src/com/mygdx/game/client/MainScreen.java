@@ -6,6 +6,9 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameStateDto;
 import com.mygdx.game.ServerPlayerDto;
@@ -19,6 +22,8 @@ public class MainScreen extends ScreenAdapter {
     private List<Object> dtoToSend;
     private Map<UUID, Player> otherPlayers;
     private OrthographicCamera camera;
+    private TiledMap currentMap;
+    private MapRenderer currentMapRenderer;
 
     public MainScreen(GameController gameController) {
         this.gameController = gameController;
@@ -26,6 +31,9 @@ public class MainScreen extends ScreenAdapter {
         dtoToSend = new ArrayList<>();
         otherPlayers = new HashMap<>();
         camera = new OrthographicCamera(30, 30f * (4 / 3));
+        currentMap = AssetSupplier.assetManager.get("maps/map1.tmx");
+        currentMapRenderer = new OrthogonalTiledMapRenderer(currentMap, 1 / 16f);
+
     }
 
     public void render(float delta) {
@@ -61,6 +69,8 @@ public class MainScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         spriteBatch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        currentMapRenderer.setView(camera);
+        currentMapRenderer.render();
         spriteBatch.begin();
         myPlayer.render(delta, spriteBatch);
         for (Player otherPlayer : otherPlayers.values()) {

@@ -1,10 +1,13 @@
 package com.mygdx.game.client;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 
 public class AssetSupplier {
@@ -17,6 +20,8 @@ public class AssetSupplier {
         assetManager = new AssetManager();
         assetManager.load("badlogic.jpg", Texture.class);
         assetManager.load("packed/pack-file.atlas", TextureAtlas.class);
+        assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+        assetManager.load("maps/map1.tmx", TiledMap.class);
         assetManager.finishLoading();
 
         PLAYER_MOVES_FORWARD_ANIMATION =
