@@ -25,7 +25,7 @@ public class MainScreen extends ScreenAdapter {
         spriteBatch = new SpriteBatch();
         dtoToSend = new ArrayList<>();
         otherPlayers = new HashMap<>();
-        camera = new OrthographicCamera(240, 240 * (1200 / 800));
+        camera = new OrthographicCamera(30, 30f * (4 / 3));
     }
 
     public void render(float delta) {

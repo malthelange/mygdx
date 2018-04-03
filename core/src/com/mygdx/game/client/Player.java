@@ -12,10 +12,14 @@ import com.mygdx.game.ServerPlayerDto;
 import java.util.UUID;
 
 public class Player {
+    private static final float SPEED = 20f;
     // TODO Would probably be better static
     private final Animation<TextureRegion> moveForwardAnimation;
     private final Animation<TextureRegion> moveBackWardAnimation;
     private final Animation<TextureRegion> moveSideAnimation;
+    private static final float WIDTH = 1f;
+    private static final float HEIGHT = 1f;
+
     private Vector2 position;
     private UUID uuid;
     private MainScreen mainScreen;
@@ -45,7 +49,7 @@ public class Player {
     }
 
     void move(Vector2 direction, float delta) {
-        direction.scl(delta * 100);
+        direction.scl(delta * Player.SPEED);
         if (direction.y > 0) {
             setMovementState(PlayerMovementState.UP);
         } else if (direction.y < 0) {
@@ -77,31 +81,36 @@ public class Player {
             case UP:
                 spriteBatch.draw(
                         moveBackWardAnimation.getKeyFrame(movementStateTime, true),
-                        position.x, position.y);
+                        position.x, position.y,
+                        Player.WIDTH, Player.HEIGHT);
                 break;
             case DOWN:
                 spriteBatch.draw(
                         moveForwardAnimation.getKeyFrame(movementStateTime, true),
-                        position.x, position.y);
+                        position.x, position.y,
+                        Player.WIDTH, Player.HEIGHT);
                 break;
             case LEFT:
                 TextureRegion transformedFrame = new TextureRegion(moveSideAnimation.getKeyFrame(movementStateTime, true));
                 transformedFrame.flip(true, false);
                 spriteBatch.draw(
                         transformedFrame,
-                        position.x, position.y);
+                        position.x, position.y,
+                        Player.WIDTH, Player.HEIGHT);
                 break;
             case RIGHT:
                 spriteBatch.draw(
                         moveSideAnimation.getKeyFrame(movementStateTime, true),
-                        position.x, position.y);
+                        position.x, position.y,
+                        Player.WIDTH, Player.HEIGHT);
                 break;
             case IDLE:
                 Sprite sprite = new Sprite(moveForwardAnimation.getKeyFrame(0, true));
                 sprite.setSize(40, 40);
                 spriteBatch.draw(
                         sprite,
-                        position.x, position.y);
+                        position.x, position.y,
+                        Player.WIDTH, Player.HEIGHT);
                 break;
         }
     }

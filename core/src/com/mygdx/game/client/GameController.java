@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class GameController extends Game {
-    public static float ASPECT_RATIO = 3 / 4;
 	private MainScreen mainScreen;
 	private Client client;
     private UUID uuid;
