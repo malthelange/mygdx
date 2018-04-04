@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextobjectid="2">
  <tileset firstgid="1" name="hyptosis-free-1" tilewidth="32" tileheight="32" tilecount="900" columns="30">
   <image source="../raw-images/tile_sets/hyptosis_tile-art-batch-1.png" width="960" height="960"/>
  </tileset>
@@ -75,4 +75,9 @@
 0,0,0,0,0,0,0,0,0,114,114,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup name="info">
+  <object id="1" name="spawn" x="626" y="719" visible="0">
+   <point/>
+  </object>
+ </objectgroup>
 </map>

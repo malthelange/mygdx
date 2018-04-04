@@ -9,13 +9,14 @@ import java.util.UUID;
 
 public class ServerPlayer {
     private Vector2 position;
-    private UUID id;
+    private UUID uuid;
     private PlayerMovementState movementState;
 
-    public ServerPlayer(UUID id) {
+    public ServerPlayer(UUID uuid, Vector2 spawnPoint) {
         position = new Vector2(0, 0);
-        this.id = id;
+        this.uuid = uuid;
         movementState = PlayerMovementState.IDLE;
+        position.set(spawnPoint);
     }
 
     public void move(Vector2 direction) {
@@ -26,12 +27,12 @@ public class ServerPlayer {
         this.movementState = movementState;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
     public ServerPlayerDto getDto() {
-        return new ServerPlayerDto(id, position, movementState);
+        return new ServerPlayerDto(uuid, position, movementState);
     }
 
     public void update(PlayerUpdateDto playerUpdateDto) {

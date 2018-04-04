@@ -110,7 +110,19 @@ public class Player {
     }
 
     void update(ServerPlayerDto serverPlayerDto) {
-        setPosition(serverPlayerDto.position);
+        if (position.dst(serverPlayerDto.position) > 20f) {
+            setPosition(serverPlayerDto.position);
+        }
         setMovementState(serverPlayerDto.movementState);
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public void updateMainPlayer(ServerPlayerDto playerDto) {
+        if (position.dst(playerDto.position) > 2) {
+            position.set(playerDto.position);
+        }
     }
 }

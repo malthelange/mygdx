@@ -1,10 +1,13 @@
 package com.mygdx.game.server;
 
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Server;
 import com.mygdx.game.GameStateDto;
 import com.mygdx.game.KryoSetup;
 import com.mygdx.game.PlayerUpdateDto;
 import com.mygdx.game.ServerPlayerDto;
+import org.mapeditor.core.MapObject;
+import org.mapeditor.core.ObjectGroup;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,6 +23,8 @@ public class GameServer {
     private float lastUpdate = 0;
     private float delta = 0;
     private boolean running = true;
+    private org.mapeditor.core.Map tiledMap;
+    private Vector2 spawnPoint;
 
     private GameServer() {
         setUp();
@@ -47,6 +52,16 @@ public class GameServer {
             ServerAsssetSupplier.loadAssets();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        tiledMap = ServerAsssetSupplier.tileMap;
+        ObjectGroup objectGroup = (ObjectGroup) tiledMap.getLayer(2);
+        for (MapObject mapObject : objectGroup) {
+            if (mapObject.getName().equals("spawn")) {
+                spawnPoint =
+                        new Vector2(
+                                (float) mapObject.getX() / tiledMap.getTileWidth(),
+                                (float) mapObject.getY() / tiledMap.getTileHeight());
+            }
         }
         serverPlayers = new HashMap<>();
         server = new Server();
@@ -77,7 +92,7 @@ public class GameServer {
     }
 
     public ServerPlayer addServerPlayer(UUID uuid) {
-        ServerPlayer serverPlayer = new ServerPlayer(uuid);
+        ServerPlayer serverPlayer = new ServerPlayer(uuid, spawnPoint);
         serverPlayers.put(uuid, serverPlayer);
         return serverPlayer;
     }

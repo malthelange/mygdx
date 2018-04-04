@@ -3,6 +3,7 @@ package com.mygdx.game.client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,8 +25,10 @@ public class MainScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private TiledMap currentMap;
     private MapRenderer currentMapRenderer;
+    private FPSLogger fpsLogger;
 
     public MainScreen(GameController gameController) {
+        fpsLogger = new FPSLogger();
         this.gameController = gameController;
         spriteBatch = new SpriteBatch();
         dtoToSend = new ArrayList<>();
@@ -33,11 +36,11 @@ public class MainScreen extends ScreenAdapter {
         camera = new OrthographicCamera(30, 30f * (4 / 3));
         currentMap = AssetSupplier.assetManager.get("maps/map1.tmx");
         currentMapRenderer = new OrthogonalTiledMapRenderer(currentMap, 1 / 16f);
-
     }
 
     public void render(float delta) {
         // TODO should probably split ticks and server communication
+        fpsLogger.log();
         getFromServer();
         doUpdate(delta);
         doRender(delta);
@@ -67,10 +70,12 @@ public class MainScreen extends ScreenAdapter {
 
     private void doRender(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
-        spriteBatch.setProjectionMatrix(camera.combined);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        camera.position.set(myPlayer.getPosition(), 0);
+        camera.update();
         currentMapRenderer.setView(camera);
         currentMapRenderer.render();
+        spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
         myPlayer.render(delta, spriteBatch);
         for (Player otherPlayer : otherPlayers.values()) {
@@ -89,7 +94,7 @@ public class MainScreen extends ScreenAdapter {
     }
 
     public void updateGameState(GameStateDto gameStateDto) {
-        myPlayer.setPosition(gameStateDto.serverPlayer.position);
+        myPlayer.updateMainPlayer(gameStateDto.serverPlayer);
         updateOtherPlayers(gameStateDto.otherPlayerDtos);
     }
 
