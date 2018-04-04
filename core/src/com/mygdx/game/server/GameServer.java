@@ -58,9 +58,7 @@ public class GameServer {
         for (MapObject mapObject : objectGroup) {
             if (mapObject.getName().equals("spawn")) {
                 spawnPoint =
-                        new Vector2(
-                                (float) mapObject.getX() / tiledMap.getTileWidth(),
-                                (float) mapObject.getY() / tiledMap.getTileHeight());
+                        translateMapObjectToWorld(mapObject, tiledMap);
             }
         }
         serverPlayers = new HashMap<>();
@@ -73,6 +71,12 @@ public class GameServer {
         } catch (IOException e) {
             return;
         }
+    }
+
+    private Vector2 translateMapObjectToWorld(MapObject mapObject, org.mapeditor.core.Map tiledMap) {
+        return new Vector2(
+                (float) mapObject.getX() / tiledMap.getTileWidth(),
+                tiledMap.getHeight() - (float) mapObject.getY() / tiledMap.getTileHeight());
     }
 
     ServerPlayer getServerPlayerFromId(UUID uuid) {

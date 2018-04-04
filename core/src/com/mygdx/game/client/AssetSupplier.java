@@ -21,6 +21,7 @@ public class AssetSupplier {
         assetManager.load("badlogic.jpg", Texture.class);
         assetManager.load("packed/pack-file.atlas", TextureAtlas.class);
         assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+        // TODO use the preprocessed tileset data for the map, to enable padding. This should avoid lines.
         assetManager.load("maps/map1.tmx", TiledMap.class);
         assetManager.finishLoading();
 

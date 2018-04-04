@@ -33,9 +33,9 @@ public class MainScreen extends ScreenAdapter {
         spriteBatch = new SpriteBatch();
         dtoToSend = new ArrayList<>();
         otherPlayers = new HashMap<>();
-        camera = new OrthographicCamera(30, 30f * (4 / 3));
+        camera = new OrthographicCamera(30, 30f);
         currentMap = AssetSupplier.assetManager.get("maps/map1.tmx");
-        currentMapRenderer = new OrthogonalTiledMapRenderer(currentMap, 1 / 16f);
+        currentMapRenderer = new OrthogonalTiledMapRenderer(currentMap, 1 / 32f);
     }
 
     public void render(float delta) {
@@ -69,6 +69,7 @@ public class MainScreen extends ScreenAdapter {
     }
 
     private void doRender(float delta) {
+        System.out.println(myPlayer.getPosition());
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.position.set(myPlayer.getPosition(), 0);

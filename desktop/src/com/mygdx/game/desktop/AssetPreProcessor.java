@@ -10,8 +10,9 @@ public class AssetPreProcessor {
 
     public static void packTextures() {
         TexturePacker.Settings settings = new TexturePacker.Settings();
-        settings.maxWidth = 512;
-        settings.maxHeight = 512;
+        settings.maxWidth = 2048;
+        settings.maxHeight = 2048;
+        settings.duplicatePadding = true;
         TexturePacker.process(settings, "raw-images", "packed", "pack-file");
     }
 }
