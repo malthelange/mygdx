@@ -43,6 +43,11 @@ public class GameServer {
     }
 
     private void setUp() {
+        try {
+            ServerAsssetSupplier.loadAssets();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         serverPlayers = new HashMap<>();
         server = new Server();
         KryoSetup.setUpKryo(server.getKryo());

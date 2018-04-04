@@ -42,6 +42,8 @@ project(":desktop") {
 
     dependencies {
         compile project(":core")
+        // compile group: 'com.github.asilvestre', name: 'jpurexml', version: '0.12'
+        // compile group: 'im.bci', name: 'libtiled-jpurexml', version: '0.4'
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
